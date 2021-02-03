@@ -13,62 +13,34 @@ using PasswordManager.Classes;
 namespace PasswordManager.Forms
 {
     public partial class SetPassword : Form
-    {        
-        private bool firstStart = true;
+    {                
         private string password;
+        public string Password { get => password; set => password = value; }        
 
-        public string Password { get => password; set => password = value; }
-
-        /// <summary>
-        /// Used to set the form if it's the first time the app is launched.
-        /// </summary>
-        /// <param name="firstStart">Is this the first time the app is launched?</param>
-        public SetPassword(bool _firstStart)
+        public SetPassword()
         {            
-            InitializeComponent();            
-            firstStart = _firstStart;
-            
-            if (firstStart)
-            {               
-                generateRndPw_Button.Visible = false;
-                generateRndPw_Button.Enabled = false;
-            }
-            else
-            {
-                generateRndPw_Button.Visible = true;
-                generateRndPw_Button.Enabled = true;                
-            }
-            
+            InitializeComponent();
+
+            generateRndPw_Button.Visible = !Login.firstStart;
+            generateRndPw_Button.Enabled = !Login.firstStart;            
         }
 
         private void SetPw_Button_Click(object sender, EventArgs e)
         {            
-            string newPw = newPw_Textbox.Text;
-            string newPwRep = newPwRep_Textbox.Text;
+            string newPass = newPw_Textbox.Text;
+            string newPassRepeated = newPwRep_Textbox.Text;
 
             bool error = false;
 
-            // Just verifies length
-            if (firstStart)
+            // Verifies password format
+            if (!Utils.VerifyPassword(newPass, Login.firstStart) ||
+                !Utils.VerifyPassword(newPassRepeated, Login.firstStart))
             {
-                if (newPw.Length < 8 || newPwRep.Length < 8)
-                {
-                    error = true;
-                    MessageBox.Show("The password doesn't fulfill the requeriments.", "Password error", MessageBoxButtons.OK);
-                }
+                error = true;
+                MessageBox.Show("The password doesn't fulfill the requeriments.", "Password error", MessageBoxButtons.OK);
             }                
-            // Full mode verification
-            else
-            {
-                if (!Utils.VerifyPassword(newPw) || !Utils.VerifyPassword(newPwRep))
-                {
-                    error = true;
-                    MessageBox.Show("The password doesn't fulfill the requeriments.", "Password error", MessageBoxButtons.OK);
-                }
-            }
-                
             // Verifies matching
-            if (newPw != newPwRep)
+            if (newPass != newPassRepeated)
             {
                 error = true;
                 MessageBox.Show("The passwords don't match.", "Password error", MessageBoxButtons.OK);
@@ -77,38 +49,36 @@ namespace PasswordManager.Forms
             // There was no errors in passwords
             if (!error)
             {
-                if (!firstStart)
+                if (Login.firstStart)
                 {
-                    ConfirmPassword confirmPwForm = new ConfirmPassword(false, null);
-
+                    ConfirmAppPassword confirmPwForm = new ConfirmAppPassword(newPass);
                     confirmPwForm.FormClosed += delegate
                     {
-                        if (confirmPwForm.correctPw && confirmPwForm.DialogResult == DialogResult.OK)
+                        if (confirmPwForm.isCorrect)
                         {
-                            Password = newPw;
+                            Password = newPass;
                             Close();
                         }
 
                     };
 
                     confirmPwForm.ShowDialog();
-                } 
+                }
                 else
                 {
-                    ConfirmPassword confirmPwForm = new ConfirmPassword(true, newPw);
+                    ConfirmAppPassword confirmPwForm = new ConfirmAppPassword(null);
 
                     confirmPwForm.FormClosed += delegate
                     {
-                        if (confirmPwForm.correctPw && confirmPwForm.DialogResult == DialogResult.OK)
+                        if (confirmPwForm.isCorrect)
                         {
-                            Password = newPw;
+                            Password = newPass;
                             Close();
                         }
-
                     };
 
-                    confirmPwForm.Show();
-                }
+                    confirmPwForm.ShowDialog();
+                }                 
             }
         }
 
@@ -124,7 +94,7 @@ namespace PasswordManager.Forms
         {
             string helpStr;
 
-            if (firstStart)            
+            if (Login.firstStart)            
                 helpStr = "The password must have:\nAt least 8 characters.";
             
             else

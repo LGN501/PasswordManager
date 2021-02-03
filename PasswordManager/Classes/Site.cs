@@ -49,11 +49,11 @@ namespace PasswordManager.Classes
         {
             string command = "SELECT * FROM Sites;";
 
-            Utils.SqlConn.Open();
+            Program.SqlConn.Open();
 
             List<Site> list = new List<Site>();
 
-            SQLiteDataAdapter db = new SQLiteDataAdapter(command, Utils.SqlConn);
+            SQLiteDataAdapter db = new SQLiteDataAdapter(command, Program.SqlConn);
             DataSet ds = new DataSet();
             db.Fill(ds);
 
@@ -63,7 +63,7 @@ namespace PasswordManager.Classes
                     list.Add(new Site(datarow));
             }
 
-            Utils.SqlConn.Close();
+            Program.SqlConn.Close();
             return list;
         }
 
@@ -76,13 +76,13 @@ namespace PasswordManager.Classes
         {
             string command = "SELECT * FROM Sites WHERE id = " + siteId;
 
-            Utils.SqlConn.Open();            
+            Program.SqlConn.Open();            
 
-            SQLiteDataAdapter db = new SQLiteDataAdapter(command, Utils.SqlConn);
+            SQLiteDataAdapter db = new SQLiteDataAdapter(command, Program.SqlConn);
             DataSet ds = new DataSet();
             db.Fill(ds);
 
-            Utils.SqlConn.Close();
+            Program.SqlConn.Close();
             return (ds != null && ds.Tables[0].Rows.Count > 0) ? (new Site(ds.Tables[0].Rows[0])) : (null);
         }
 
@@ -100,12 +100,12 @@ namespace PasswordManager.Classes
             string command = "INSERT INTO Sites (name) values ('" + siteName + "');";
             int result;
 
-            Utils.SqlConn.Open();
+            Program.SqlConn.Open();
 
-            SQLiteCommand sqlCommand = Utils.SqlConn.CreateCommand();
+            SQLiteCommand sqlCommand = Program.SqlConn.CreateCommand();
             sqlCommand.CommandText = command;
             result = sqlCommand.ExecuteNonQuery();
-            Utils.SqlConn.Close();
+            Program.SqlConn.Close();
 
             return result == 1 ? true : false;
         }
@@ -124,14 +124,14 @@ namespace PasswordManager.Classes
             Site site = Get_ById(siteId);
 
             string command = "DELETE FROM Sites WHERE id = " + siteId;
-                       
-            Utils.SqlConn.Open();
 
-            SQLiteCommand sqlCommand = Utils.SqlConn.CreateCommand();
+            Program.SqlConn.Open();
+
+            SQLiteCommand sqlCommand = Program.SqlConn.CreateCommand();
             sqlCommand.CommandText = command;
             int result = sqlCommand.ExecuteNonQuery();
-            
-            Utils.SqlConn.Close();
+
+            Program.SqlConn.Close();            
 
             if (site != null && site.USERS.Count > 0)
             {

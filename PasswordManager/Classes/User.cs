@@ -49,10 +49,13 @@ namespace PasswordManager.Classes
         public static User Get_ById(int userId)
         {
             string command = "SELECT * FROM Users WHERE id = " + userId;
+            //Program.SqlConn.Open();
 
-            SQLiteDataAdapter db = new SQLiteDataAdapter(command, Utils.SqlConn);
+            SQLiteDataAdapter db = new SQLiteDataAdapter(command, Program.SqlConn);
             DataSet ds = new DataSet();
-            db.Fill(ds);            
+            db.Fill(ds);
+
+            //Program.SqlConn.Close();
 
             return (ds != null && ds.Tables[0].Rows.Count > 0) ? (new User(ds.Tables[0].Rows[0])) : (null);
         }
@@ -66,10 +69,11 @@ namespace PasswordManager.Classes
         public static List<User> Get_BySite(int siteId)
         {
             string command = "SELECT * FROM Users WHERE site = " + siteId;
+            //Program.SqlConn.Open();
 
             List<User> list = new List<User>();
 
-            SQLiteDataAdapter db = new SQLiteDataAdapter(command, Utils.SqlConn);
+            SQLiteDataAdapter db = new SQLiteDataAdapter(command, Program.SqlConn);
             DataSet ds = new DataSet();
             db.Fill(ds);
 
@@ -77,7 +81,9 @@ namespace PasswordManager.Classes
             {
                 foreach (DataRow datarow in ds.Tables[0].Rows)
                     list.Add(new User(datarow));
-            }           
+            }
+
+            //Program.SqlConn.Close();
             return list;
         }
 
@@ -98,12 +104,12 @@ namespace PasswordManager.Classes
         {
             string command = "UPDATE Users SET password = '" + newPw + "' WHERE id = " + userId;
 
-            Utils.SqlConn.Open();
+            Program.SqlConn.Open();
 
-            SQLiteCommand sqlCommand = Utils.SqlConn.CreateCommand();
+            SQLiteCommand sqlCommand = Program.SqlConn.CreateCommand();
             sqlCommand.CommandText = command;
             int result = sqlCommand.ExecuteNonQuery();
-            Utils.SqlConn.Close();
+            Program.SqlConn.Close();
 
             return result;
         }
@@ -121,13 +127,13 @@ namespace PasswordManager.Classes
         {
             string command = "DELETE FROM Users WHERE id = " + userId;
 
-            Utils.SqlConn.Open();
+            Program.SqlConn.Open();
 
-            SQLiteCommand sqlCommand = Utils.SqlConn.CreateCommand();
+            SQLiteCommand sqlCommand = Program.SqlConn.CreateCommand();
             sqlCommand.CommandText = command;
             int result = sqlCommand.ExecuteNonQuery();
 
-            Utils.SqlConn.Close();
+            Program.SqlConn.Close();
 
             return result == 1 ? true : false;
         }
@@ -156,12 +162,12 @@ namespace PasswordManager.Classes
             string command = "INSERT INTO Users (site, username, password) values (" + siteId + ", '" + username + "', '" + password + "');";
             int result;
 
-            Utils.SqlConn.Open();
+            Program.SqlConn.Open();
 
-            SQLiteCommand sqlCommand = Utils.SqlConn.CreateCommand();
+            SQLiteCommand sqlCommand = Program.SqlConn.CreateCommand();
             sqlCommand.CommandText = command;
             result = sqlCommand.ExecuteNonQuery();
-            Utils.SqlConn.Close();
+            Program.SqlConn.Close();
 
             return result == 1 ? true : false;
         }

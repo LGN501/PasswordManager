@@ -57,7 +57,7 @@
             // 
             // setPw_Button
             // 
-            this.setPw_Button.Location = new System.Drawing.Point(230, 78);
+            this.setPw_Button.Location = new System.Drawing.Point(12, 79);
             this.setPw_Button.Name = "setPw_Button";
             this.setPw_Button.Size = new System.Drawing.Size(121, 32);
             this.setPw_Button.TabIndex = 2;
@@ -67,12 +67,14 @@
             // 
             // generateRndPw_Button
             // 
-            this.generateRndPw_Button.Location = new System.Drawing.Point(12, 78);
+            this.generateRndPw_Button.Enabled = false;
+            this.generateRndPw_Button.Location = new System.Drawing.Point(139, 79);
             this.generateRndPw_Button.Name = "generateRndPw_Button";
             this.generateRndPw_Button.Size = new System.Drawing.Size(212, 32);
             this.generateRndPw_Button.TabIndex = 3;
             this.generateRndPw_Button.Text = "Generate random password";
             this.generateRndPw_Button.UseVisualStyleBackColor = true;
+            this.generateRndPw_Button.Visible = false;
             this.generateRndPw_Button.Click += new System.EventHandler(this.GenerateRndPw_Button_Click);
             // 
             // newPwRep_Textbox

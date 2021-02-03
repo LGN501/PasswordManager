@@ -12,37 +12,19 @@ namespace PasswordManager.Forms
 {
     public partial class AddUser : Form
     {        
+        int siteId;
 
-        public AddUser()
+        public AddUser(int _siteId)
         {
             InitializeComponent();
 
-            Classes.Utils.SitesFillList(sites_TreeView, false);
-        }
-
-        private void SetPw_Button_Click(object sender, EventArgs e)
-        {
-            SetPassword setPwForm = new SetPassword(false);
-
-            setPwForm.FormClosed += delegate
-            {
-                if (setPwForm.Password == null)                
-                    password_TextBox.Text = "Password";
-                
-                else                
-                    password_TextBox.Text = setPwForm.Password;                
-               
-            };
-
-            setPwForm.ShowDialog();            
+            siteId = _siteId;            
         }
 
         private void AddUser_Button_Click(object sender, EventArgs e)
         {
             string username = username_TextBox.Text;
-            string password = password_TextBox.Text;
-
-            int siteId = int.Parse(selectedSite_Label.Tag.ToString());
+            string password = password_TextBox.Text;            
 
             if (siteId < 0)
                 MessageBox.Show("A site must be selected before proceeding", "Site error", MessageBoxButtons.OK);
@@ -85,12 +67,6 @@ namespace PasswordManager.Forms
         }
 
         #endregion
-
-        private void Sites_TreeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            selectedSite_Label.Text = "Selected site: " + e.Node.Text;
-            selectedSite_Label.Tag = e.Node.Tag;
-        }
 
         private void GenerateRndPw_Button_Click(object sender, EventArgs e)
         {

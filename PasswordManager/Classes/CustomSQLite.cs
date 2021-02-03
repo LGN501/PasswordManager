@@ -57,7 +57,7 @@ namespace PasswordManager.Classes
                 conn.Close();
 
                 // If the connection was successful, the password's stored
-                Utils.AppPw = dbPw;
+                Program.AppPw = dbPw;                
 
                 return conn;
             }
